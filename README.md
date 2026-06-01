@@ -42,7 +42,10 @@ async function receivePresetData() {
 
 UML Sequence Diagram
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b525f5b46322ee9b2a053063dca7d6225a42ed9e
        User                                Web Service                         Data Service
         │                                    │                                    │
         │─── 1. POST /api/presets/save ─────>│                                    │
