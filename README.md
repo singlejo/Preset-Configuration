@@ -41,36 +41,26 @@ async function receivePresetData() {
 }
 
 UML Sequence Diagram
-TEST 1:
-Users -> Web Server: Trigger savePreset()
-Web Server -> Server: POST /api/presets/save\nBody: {name: "Failed_Order", settings: {drink:"Matcha"}}
-
-Server -> Server: Validate rquest body\n(check name, drink, sugar, icelevel)
-
-Missing Feilds:
-Server -> Web Server: 404 Bad Request\n{status:'error", message: "Invalid Request"}
-Web Server -> User: Displays Error Message
 
 
-TEST 2:
-User -> Web Server: Trigger SavePreset()
-Web Server -> Server: POST /api/presets/save\nBody: {name:"Thai Tea", settings:{drink:"Thai Tea", sugarlevel:"Less", icelevel:"Regular"}}
-
-Server -> Server: Validate Request body\n(check name, drink, sugar, icelevel)
-
-Valid Request:
-Server -> storage: storage[name] = settings
-Storage -> server: stored succefully
-server -> Web Server: 200 OK\n{status:"success", message:"Preset saved"}
-Web Server -> User: Displays success message
-
-TEST 3:
-User -> Web Server: Trigger Fetch Presets
-Web Server -> Server: GET/api/presets
-
-Server -> Storage: Read Object.keys(storage)
-Storage -> Server: ['Thai Tea']
-
-Server -> Web Server: 200  OK\n{status:"success", data:["Thai Tea"]}
-
-Web Server -> User: Display preset list# Preset-Configuration
+       User                                Web Service                         Data Service
+        │                                    │                                    │
+        │─── 1. POST /api/presets/save ─────>│                                    │
+        │                                    │─── 2. Evaluate Fields  ───────────>│
+        │                                    │                                    │
+        │                                    │◄── 3. [FAIL] Missing Parameters ───│
+        │◄── 4. 400 Bad Request  ────────────│                                    │
+        │                                    │                                    │
+        │                                    │◄── 5. [PASS] All fields Verified ──│
+        │                                    │                                    │
+        │                                    │─── 6. Add the info to storage ──┐  │
+        │                                    │                                   ││
+        │                                    │◄──────────────────────────────────┘│
+        │◄── 7. 200 Success JSON String ─────│                                    │
+        │                                    │                                    │
+        │────────────────────────────────────┼────────────────────────────────────│
+        │                                    │                                    │
+        │─── 8. GET /api/presets ───────────>│                                    │
+        │                                    │─── 9. Build Array Object ─────────┐│
+        │                                    │◄──────────────────────────────────┘│
+        │◄── 10. 200 OK Array Directory ─────│                                    │
